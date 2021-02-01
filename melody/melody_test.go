@@ -32,4 +32,10 @@ func TestRead(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got %v,\nexpected %v", got, want)
 	}
+
+	wantString := "C C G G A A G F F E E D D C"
+
+	if got.String() != wantString {
+		t.Errorf("expected string %q, got %q", wantString, got.String())
+	}
 }
