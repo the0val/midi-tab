@@ -5,6 +5,29 @@ import (
 	"testing"
 )
 
+func TestStringer(t *testing.T) {
+	melody := Melody{
+		{45, 1},
+		{46, 1},
+		{47, 1},
+		{48, 1},
+		{49, 1},
+		{50, 1},
+		{51, 1},
+		{52, 1},
+		{53, 1},
+		{54, 1},
+		{55, 1},
+		{56, 1},
+	}
+
+	want := "A A# B C C# D D# E F F# G G#"
+	got := melody.String()
+	if got != want {
+		t.Errorf("Expected string %q, got %q", want, got)
+	}
+}
+
 func TestRead(t *testing.T) {
 	const testfile = "testdata/testmelody.mid"
 
