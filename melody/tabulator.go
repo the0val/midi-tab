@@ -18,8 +18,12 @@ type Tabulator [128][]string
 
 func (t Tabulator) Tabulate(m Melody) string {
 	var outStr string
-	for n := range m {
-		outStr += t[n][0] + " "
+	for _, n := range m {
+		if ss := t[n.Key]; len(ss) == 0 {
+			outStr += "XX "
+		} else {
+			outStr += ss[0] + " "
+		}
 	}
 	// trim trailing space
 	return outStr[:len(outStr)-1]
