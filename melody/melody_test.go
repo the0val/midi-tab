@@ -62,3 +62,19 @@ func TestRead(t *testing.T) {
 		t.Errorf("expected string %q, got %q", wantString, got.String())
 	}
 }
+
+// func TestTabFromMap(t *testing.T) {
+// 	var keyMap [128][]string
+//
+// 	keyMap[45] = []string{"1"}
+// 	keyMap[46] = []string{"-1'"}
+// 	keyMap[47] = []string{"-1"}
+// 	keyMap[49] = []string{"2"}
+// 	keyMap[52] = []string{"3"}
+// 	keyMap[55] = []string{"-3"}
+// 	keyMap[56] = []string{"4"}
+//
+// 	tab := Tabulator(keyMap)
+//
+// 	tab.Tabulate()
+// }
