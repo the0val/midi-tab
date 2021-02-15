@@ -13,6 +13,20 @@ type Note struct {
 
 type Melody []Note
 
+func (m Melody) String() string {
+	out := ""
+	noteNames := [12]string{
+		"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	}
+	for _, v := range m {
+		note := noteNames[v.Key%12]
+		out += note + " "
+	}
+	// trim last space
+	out = out[:len(out)-1]
+	return out
+}
+
 type melodyReader Melody
 
 func (mr *melodyReader) callback(rd smf.Reader) {
