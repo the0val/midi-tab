@@ -1,20 +1,57 @@
 package melody
 
-type Tabulator interface {
-	Tab(Melody) string
+import (
+	"regexp"
+	"strconv"
+	"strings"
+)
+
+type TabErr string
+
+func (e TabErr) Error() string {
+	return string(e)
 }
 
-type mapTab [128]string
+const ErrorBadTemplate = TabErr("Could not parse provided temlate")
 
-func (t mapTab) Tab(m Melody) string {
+type Tabulator [128][]string
+
+func (t Tabulator) Tabulate(m Melody) string {
 	var outStr string
 	for n := range m {
-		outStr += t[n] + " "
+		outStr += t[n][0] + " "
 	}
 	// trim trailing space
 	return outStr[:len(outStr)-1]
 }
 
-func NewTabulator(mapping [128][]string) Tabulator {
-	return mapTab(mapping)
+func ParseTabTemplate(data []byte) (Tabulator, error) {
+	var ret Tabulator
+
+	newPattern := regexp.MustCompile("^([0-9]+):(.+)$")
+
+	recentKey := 0
+	for _, line := range strings.Split(string(data), "\n") {
+		if newPattern.MatchString(line) {
+			subMatch := newPattern.FindStringSubmatch(line)
+
+			note := subMatch[1]
+			key, err := strconv.Atoi(note)
+			if err != nil {
+				return Tabulator{}, ErrorBadTemplate
+			}
+
+			ret[key] = append(ret[key], "")
+			line = subMatch[2]
+			recentKey = key
+		}
+
+		ret[recentKey][len(ret[recentKey])-1] = ret[recentKey][len(ret[recentKey])-1] + line
+	}
+
+	return ret, nil
+}
+
+func (t Tabulator) Export() []byte {
+	return []byte("")
 }
