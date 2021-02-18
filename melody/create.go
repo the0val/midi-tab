@@ -1,6 +1,8 @@
 package melody
 
 import (
+	"io"
+
 	"gitlab.com/gomidi/midi/midimessage/channel"
 	"gitlab.com/gomidi/midi/smf"
 	"gitlab.com/gomidi/midi/smf/smfreader"
@@ -42,6 +44,13 @@ func (mr *melodyReader) callback(rd smf.Reader) {
 			*mr = append(*mr, Note{msg.Key(), 1})
 		}
 	}
+}
+
+func ReadReader(midi io.Reader) (Melody, error) {
+	var r melodyReader
+	smfr := smfreader.New(midi)
+	r.callback(smfr)
+	return Melody(r), nil
 }
 
 func ReadFile(path string) (Melody, error) {

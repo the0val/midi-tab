@@ -1,6 +1,7 @@
 package melody
 
 import (
+	"os"
 	"reflect"
 	"testing"
 )
@@ -47,18 +48,33 @@ func TestRead(t *testing.T) {
 		{62, 1},
 		{60, 1},
 	}
-	got, err := ReadFile(testfile)
+	t.Run("ReadFile", func(t *testing.T) {
+		got, err := ReadFile(testfile)
 
-	if err != nil {
-		t.Errorf("expected no error, got %q", err)
-	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %v,\nexpected %v", got, want)
-	}
+		if err != nil {
+			t.Errorf("expected no error, got %q", err)
+		}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v,\nexpected %v", got, want)
+		}
 
-	wantString := "C C G G A A G F F E E D D C"
+		wantString := "C C G G A A G F F E E D D C"
 
-	if got.String() != wantString {
-		t.Errorf("expected string %q, got %q", wantString, got.String())
-	}
+		if got.String() != wantString {
+			t.Errorf("expected string %q, got %q", wantString, got.String())
+		}
+	})
+	t.Run("Reader", func(t *testing.T) {
+		file, err := os.Open(testfile)
+
+		if err != nil {
+			t.Errorf("expected no error, got %q", err)
+		}
+
+		got, err := ReadReader(file)
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v,\nexpected %v", got, want)
+		}
+	})
 }
