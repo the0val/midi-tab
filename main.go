@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -9,25 +10,25 @@ import (
 )
 
 func main() {
-	tabText, err := ioutil.ReadFile("melody/testdata/harmonica-tabtemlate")
+	midiPath := flag.String("file", "melody.mid", "Path to midi file of the melody.")
+	templatePath := flag.String("template", "harmonica.tabtemplate", "Path to template file")
+	transpose := flag.Int("transpose", 0, "number of steps to transpose melody before convertion. Can be negative.")
+	flag.Parse()
+
+	m, err := melody.ReadFile(*midiPath)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
+	m.Transpose(*transpose)
 
-	tab, err := melody.ParseTabTemplate(tabText)
+	templateText, err := ioutil.ReadFile(*templatePath)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
-
-	mel, err := melody.ReadFile("melody/testdata/testmelody.mid")
+	t, err := melody.ParseTabTemplate(templateText)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 
-	mel.Transpose(-3 + 12)
-
-	fmt.Println(tab.Tabulate(mel))
+	fmt.Println(t.Tabulate(m))
 }
